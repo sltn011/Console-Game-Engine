@@ -60,7 +60,8 @@ Installation:
     
     Put downloaded files in one folder and compile  
     
-    For best FPS set compiler optimization to maximum (and set configuration to Release in VS) 
+    For best FPS set compiler optimization to maximum (and set configuration to Release in VS)
+    You can also try changing parameters of createConsole function in main function at "Console FPS.cpp"
 ```
 Original code used as an example:  
     https://github.com/OneLoneCoder/videos
