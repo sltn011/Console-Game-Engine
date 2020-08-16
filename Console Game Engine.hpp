@@ -25,6 +25,7 @@ VS: Project Properties -> General -> Character Set -> Use Unicode
 #include <memory>
 #include <thread>
 #include <atomic>
+#include <mutex>
 #include <condition_variable>
 
 namespace CGE {
@@ -135,7 +136,7 @@ namespace CGE {
 
         Sprite
         ( Sprite &&s
-        ) {
+        ) noexcept {
             m_width = std::move(s.m_width);
             m_height = std::move(s.m_height);
             std::swap(m_pixels, s.m_pixels);
@@ -1080,7 +1081,7 @@ namespace CGE {
 
         // These need to be static because of the OnDestroy call the OS may make. The OS
         // spawns a special thread just for that
-        inline static std::atomic_bool m_atomActive = false;
+        inline static std::atomic_bool m_atomActive{ false };
         inline static std::condition_variable m_gameFinished;
         inline static std::mutex m_muxGame;
     };
