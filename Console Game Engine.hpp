@@ -93,8 +93,8 @@ namespace CGE {
         ) {
             m_width = 8;
             m_height = 8;
-            m_pixels = new basePixelType[m_width * m_height];
-            m_colors = new baseColorType[m_width * m_height];
+            m_pixels = std::make_unique<basePixelType[]>(m_width * m_height);
+            m_colors = std::make_unique<baseColorType[]>(m_width * m_height);
             for (short i = 0; i < m_width * m_height; ++i) {
                 m_pixels[i] = Pixel::Empty;
                 m_colors[i] = Color::FG_Black;
@@ -108,8 +108,8 @@ namespace CGE {
         ) {
             m_width = width;
             m_height = height;
-            m_pixels = new basePixelType[width * height];
-            m_colors = new baseColorType[width * height];
+            m_pixels = std::make_unique<basePixelType[]>(m_width * m_height);
+            m_colors = std::make_unique<baseColorType[]>(m_width * m_height);
             for (short i = 0; i < m_width * m_height; ++i) {
                 m_pixels[i] = Pixel::Empty;
                 m_colors[i] = Color::FG_Black;
@@ -123,25 +123,13 @@ namespace CGE {
             readFromFile(filePath);
         }
 
-        ~Sprite
-        (
-        ) {
-            delete[] m_pixels;
-            delete[] m_colors;
-        }
-
         Sprite
         ( Sprite const &s
         ) = delete;
 
         Sprite
         ( Sprite &&s
-        ) noexcept {
-            m_width = std::move(s.m_width);
-            m_height = std::move(s.m_height);
-            std::swap(m_pixels, s.m_pixels);
-            std::swap(m_colors, s.m_colors);
-        }
+        ) noexcept = default;
 
         short getWidth
         (
@@ -234,13 +222,13 @@ namespace CGE {
         std::wstring pixelsToWString
         (
         ) const {
-            return std::wstring(reinterpret_cast<wchar_t*>(m_pixels), reinterpret_cast<wchar_t*>(m_pixels + m_width * m_height));
+            return std::wstring(reinterpret_cast<wchar_t*>(m_pixels.get()), reinterpret_cast<wchar_t*>(m_pixels.get() + m_width * m_height));
         }
 
         std::wstring colorsToWString
         (
         ) const {
-            return std::wstring(reinterpret_cast<wchar_t*>(m_colors), reinterpret_cast<wchar_t*>(m_colors + m_width * m_height));
+            return std::wstring(reinterpret_cast<wchar_t*>(m_colors.get()), reinterpret_cast<wchar_t*>(m_colors.get() + m_width * m_height));
         }
 
         // Writes sprite to binary file
@@ -254,8 +242,8 @@ namespace CGE {
             }
             std::fwrite(&m_width, sizeof(m_width), 1, f);
             std::fwrite(&m_height, sizeof(m_height), 1, f);
-            std::fwrite(m_pixels, sizeof(*m_pixels), m_width * m_height, f);
-            std::fwrite(m_colors, sizeof(*m_colors), m_width * m_height, f);
+            std::fwrite(m_pixels.get(), sizeof(m_pixels[0]), m_width * m_height, f);
+            std::fwrite(m_colors.get(), sizeof(m_colors[0]), m_width * m_height, f);
             std::fclose(f);
             return true;
         }
@@ -270,14 +258,12 @@ namespace CGE {
             if (!f) {
                 return false;
             }
-            delete[] m_pixels;
-            delete[] m_colors;
             std::fread(&m_width, sizeof(m_width), 1, f);
             std::fread(&m_height, sizeof(m_height), 1, f);
-            m_pixels = new basePixelType[m_width * m_height];
-            m_colors = new baseColorType[m_width * m_height];
-            std::fread(m_pixels, sizeof(*m_pixels), m_width * m_height, f);
-            std::fread(m_colors, sizeof(*m_colors), m_width * m_height, f);
+            m_pixels = std::make_unique<basePixelType[]>(m_width * m_height);
+            m_colors = std::make_unique<baseColorType[]>(m_width * m_height);
+            std::fread(m_pixels.get(), sizeof(m_pixels[0]), m_width * m_height, f);
+            std::fread(m_colors.get(), sizeof(m_colors[0]), m_width * m_height, f);
             std::fclose(f);
             return true;
         }
@@ -288,8 +274,8 @@ namespace CGE {
         short m_height = 0;
 
         // Arrays that represent how sprite looks like
-        basePixelType *m_pixels = nullptr;
-        baseColorType *m_colors = nullptr;
+        std::unique_ptr<basePixelType[]> m_pixels;
+        std::unique_ptr<basePixelType[]> m_colors;
 
         static float sampleCoord
         ( float c
