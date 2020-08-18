@@ -38,6 +38,8 @@ Game engine can draw sprites that are written inside binary file with special fo
 ```
 (short)width (short)height (uint16_t[width*height])pixelType (uint16_t[width*height])colorType
 ```  
+
+#! All files below use Console Game Engine
   
 # Console FPS
 Console FPS is a prototype of a game similar to Wolfenstein 3D.   
@@ -69,3 +71,8 @@ Original code used as an example:
 Videos used as tutorial for learning:  
     Part 1: https://youtu.be/xW8skO7MFYw  
     Part 2: https://youtu.be/HEb2akswCcw
+
+# 3D Graphics Engine
+File 1  
+First file contains program that renders rotating 3D mesh of a cube  
+Program uses matrix multiplication to rotate vertices around axises and to project 3D image to 2D screen  
