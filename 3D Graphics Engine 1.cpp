@@ -9,6 +9,9 @@ struct Vec3D {
 
 struct Triangle {
     Vec3D vertices[3];
+
+    CGE::baseColorType color;
+    CGE::basePixelType pixel;
 };
 
 struct Mesh {
@@ -118,31 +121,93 @@ public:
                 translatedTriang.vertices[i].z += 3.0f;
             }
 
-            // Project triangle from 3D to 2D
-            Triangle projectedTriang{};
-            for (int i = 0; i < 3; ++i) {
-                multiplyMatrixVector(translatedTriang.vertices[i], projectedTriang.vertices[i], m_projectionMatrix);
+            // Two sides of a triangle
+            Vec3D line1, line2;
+
+            line1.x = translatedTriang.vertices[1].x - translatedTriang.vertices[0].x;
+            line1.y = translatedTriang.vertices[1].y - translatedTriang.vertices[0].y;
+            line1.z = translatedTriang.vertices[1].z - translatedTriang.vertices[0].z;
+
+            line2.x = translatedTriang.vertices[2].x - translatedTriang.vertices[0].x;
+            line2.y = translatedTriang.vertices[2].y - translatedTriang.vertices[0].y;
+            line2.z = translatedTriang.vertices[2].z - translatedTriang.vertices[0].z;
+
+            // Normal vector for our triangle
+            Vec3D normal;
+
+            // Calculating normal
+            normal.x = line1.y * line2.z - line1.z * line2.y;
+            normal.y = line1.z * line2.x - line1.x * line2.z;
+            normal.z = line1.x * line2.y - line1.y * line2.x;
+
+            // Normalizing normal vector
+            float normalLength = std::sqrtf(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
+            normal.x /= normalLength;
+            normal.y /= normalLength;
+            normal.z /= normalLength;
+
+            // Calculating dot product between normal and vector from camera to point of a triangle
+            // We can choose any point of a triangle bcz they all lie in a plane
+            float dotProduct = 
+                normal.x * (translatedTriang.vertices[0].x - m_camera.x) +
+                normal.y * (translatedTriang.vertices[0].y - m_camera.y) +
+                normal.z * (translatedTriang.vertices[0].z - m_camera.z);
+
+            // We can only see the side of a cube if dot product < 0
+            if (dotProduct < 0.0f) {
+
+                // Illumination (normalized vector)
+                Vec3D lightDirection = { 0.0f, 0.0f, -1.0f };
+                float lightVecLength = std::sqrtf(lightDirection.x * lightDirection.x + lightDirection.y * lightDirection.y + lightDirection.z * lightDirection.z);
+                lightDirection.x /= lightVecLength;
+                lightDirection.y /= lightVecLength;
+                lightDirection.z /= lightVecLength;
+
+                // Dot product between normal and light direction vectors
+                float dp = normal.x * lightDirection.x + normal.y * lightDirection.y + normal.z * lightDirection.z;
+
+                // Getting color of a cube pixel and pixel type using illumination power
+                CHAR_INFO c = getColor(dp);
+                translatedTriang.color = c.Attributes;
+                translatedTriang.pixel = c.Char.UnicodeChar;
+
+                // Project triangle from 3D to 2D
+                Triangle projectedTriang{};
+                for (int i = 0; i < 3; ++i) {
+                    multiplyMatrixVector(translatedTriang.vertices[i], projectedTriang.vertices[i], m_projectionMatrix);
+                }
+                projectedTriang.color = translatedTriang.color;
+                projectedTriang.pixel = translatedTriang.pixel;
+
+                // Scale into view
+                for (int i = 0; i < 3; ++i) {
+
+                    // Shift normalized coordinates from [-1; +1] to [0; +2] 
+                    projectedTriang.vertices[i].x += 1.0f;
+                    projectedTriang.vertices[i].y += 1.0f;
+
+                    // Divide coordinates to become [0; +1] and muliply them by screen dimensions 
+                    projectedTriang.vertices[i].x *= 0.5f * (float)m_screenWidth;
+                    projectedTriang.vertices[i].y *= 0.5f * (float)m_screenHeight;
+                }
+
+                fillTriangle(
+                    (short)projectedTriang.vertices[0].x, (short)projectedTriang.vertices[0].y,
+                    (short)projectedTriang.vertices[1].x, (short)projectedTriang.vertices[1].y,
+                    (short)projectedTriang.vertices[2].x, (short)projectedTriang.vertices[2].y,
+                    projectedTriang.pixel,
+                    projectedTriang.color
+                );
+
+                /* drawTriangle(
+                    (short)projectedTriang.vertices[0].x, (short)projectedTriang.vertices[0].y,
+                    (short)projectedTriang.vertices[1].x, (short)projectedTriang.vertices[1].y,
+                    (short)projectedTriang.vertices[2].x, (short)projectedTriang.vertices[2].y,
+                    CGE::Pixel::Solid,
+                    CGE::Color::FG_White
+                ); */
+
             }
-
-            // Scale into view
-            for (int i = 0; i < 3; ++i) {
-
-                // Shift normalized coordinates from [-1; +1] to [0; +2] 
-                projectedTriang.vertices[i].x += 1.0f;
-                projectedTriang.vertices[i].y += 1.0f;
-
-                // Divide coordinates to become [0; +1] and muliply them by screen dimensions 
-                projectedTriang.vertices[i].x *= 0.5f * (float)m_screenWidth;
-                projectedTriang.vertices[i].y *= 0.5f * (float)m_screenHeight;
-            }
-
-            drawTriangle(
-                (short)projectedTriang.vertices[0].x, (short)projectedTriang.vertices[0].y,
-                (short)projectedTriang.vertices[1].x, (short)projectedTriang.vertices[1].y,
-                (short)projectedTriang.vertices[2].x, (short)projectedTriang.vertices[2].y,
-                CGE::Pixel::Solid,
-                CGE::Color::FG_White
-            );
         }
 
         return true;
@@ -161,17 +226,51 @@ public:
         }
     }
 
+    // Get color and pixel type by giving value of light that illuminates point we are shading
+    CHAR_INFO getColor(float lum) {
+        CGE::baseColorType bgCol, fgCol;
+        CGE::basePixelType pix;
+        int pixelBw = (int)(13.0f * lum);
+        switch (pixelBw) {
+        case 0:  bgCol = CGE::Color::BG_Black; fgCol = CGE::Color::FG_Black; pix = CGE::Pixel::Solid; break;
+
+        case 1:  bgCol = CGE::Color::BG_Black; fgCol = CGE::Color::FG_DarkGrey; pix = CGE::Pixel::Quarter; break;
+        case 2:  bgCol = CGE::Color::BG_Black; fgCol = CGE::Color::FG_DarkGrey; pix = CGE::Pixel::Half; break;
+        case 3:  bgCol = CGE::Color::BG_Black; fgCol = CGE::Color::FG_DarkGrey; pix = CGE::Pixel::ThreeQuarters; break;
+        case 4:  bgCol = CGE::Color::BG_Black; fgCol = CGE::Color::FG_DarkGrey; pix = CGE::Pixel::Solid; break;
+
+        case 5:  bgCol = CGE::Color::BG_DarkGrey; fgCol = CGE::Color::FG_Grey; pix = CGE::Pixel::Quarter; break;
+        case 6:  bgCol = CGE::Color::BG_DarkGrey; fgCol = CGE::Color::FG_Grey; pix = CGE::Pixel::Half; break;
+        case 7:  bgCol = CGE::Color::BG_DarkGrey; fgCol = CGE::Color::FG_Grey; pix = CGE::Pixel::ThreeQuarters; break;
+        case 8:  bgCol = CGE::Color::BG_DarkGrey; fgCol = CGE::Color::FG_Grey; pix = CGE::Pixel::Solid; break;
+
+        case 9:  bgCol = CGE::Color::BG_Grey; fgCol = CGE::Color::FG_White; pix = CGE::Pixel::Quarter; break;
+        case 10: bgCol = CGE::Color::BG_Grey; fgCol = CGE::Color::FG_White; pix = CGE::Pixel::Half; break;
+        case 11: bgCol = CGE::Color::BG_Grey; fgCol = CGE::Color::FG_White; pix = CGE::Pixel::ThreeQuarters; break;
+        case 12: bgCol = CGE::Color::BG_Grey; fgCol = CGE::Color::FG_White; pix = CGE::Pixel::Solid; break;
+
+        default: bgCol = CGE::Color::BG_Black; fgCol = CGE::Color::FG_Black; pix = CGE::Pixel::Solid; break;
+        }
+
+        CHAR_INFO c;
+        c.Attributes = bgCol | fgCol;
+        c.Char.UnicodeChar = pix;
+        return c;
+    }
+
 private:
 
     Mesh m_meshCube;
     Matrix4x4 m_projectionMatrix;
+
+    Vec3D m_camera{};
 
     float m_theta = 0.0f;
 };
 
 int main() {
     Graphics3DEngine engine;
-    if (engine.createConsole(200, 200, 4, 4)) {
+    if (engine.createConsole(250, 200, 4, 4)) {
         engine.start();
     }
 }
