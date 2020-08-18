@@ -74,5 +74,7 @@ Videos used as tutorial for learning:
 
 # 3D Graphics Engine
 File 1  
-First file contains program that renders rotating 3D mesh of a cube  
+First file contains program that renders rotating 3D cube  
 Program uses matrix multiplication to rotate vertices around axises and to project 3D image to 2D screen  
+Sides that are visible to camera are calculated using dot product  
+Cube is illuminated by "light source", sides are shaded according to amount of "light" they catch  
