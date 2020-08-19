@@ -73,8 +73,9 @@ Videos used as tutorial for learning:
     Part 2: https://youtu.be/HEb2akswCcw
 
 # 3D Graphics Engine
-File 1  
-First file contains program that renders rotating 3D cube  
+File contains program that renders rotating 3D mesh  
+Program can load meshes from triangulated .obj file  
+Example file renders rocket model in "3D Models/rocket.obj"  
 Program uses matrix multiplication to rotate vertices around axises and to project 3D image to 2D screen  
 Sides that are visible to camera are calculated using dot product  
-Cube is illuminated by "light source", sides are shaded according to amount of "light" they catch  
+Model is illuminated by "light source", sides are shaded according to amount of "light" they catch  
