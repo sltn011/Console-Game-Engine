@@ -76,6 +76,22 @@ Videos used as tutorial for learning:
 File contains program that renders rotating 3D mesh  
 Program can load meshes from triangulated .obj file  
 Example file renders rocket model in "3D Models/rocket.obj"  
+Project contains 3DTools library with classes used for rendering  
+Project can be built with CMake. For this:  
+```
+In command line:
+    ...\3D Graphics Engine> cmake CMakeLists.txt
+    
+After building project if you are using VS
+    Open project folder
+    Open .sln file
+    After VS loaded your project select App
+        Turn Unicode ON
+        Set it as StartUp Project
+        
+You can now launch application
+    
+```
 Program uses matrix multiplication to rotate vertices around axises and to project 3D image to 2D screen  
 Sides that are visible to camera are calculated using dot product  
 Model is illuminated by "light source", sides are shaded according to amount of "light" they catch  
