@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Vec3d.h"
+#include "Vec3d.hpp"
 #include <array>
 
 namespace GE {
 
     class Matrix4x4 {
 
-        class Column {
+        class Row {
             
             std::array<float, 4> m_vals;
 
@@ -19,15 +19,17 @@ namespace GE {
 
         };
 
-        std::array<Column, 4> m_columns;
+        std::array<Row, 4> m_rows;
 
     public:
 
-        Column &operator[](int index);
+        Row &operator[](int index);
 
-        Column const &operator[](int index) const;
+        Row const &operator[](int index) const;
 
         Vec3D multiplyVector(Vec3D const &v) const;
+
+        Matrix4x4 multiplyMatrix(Matrix4x4 const &v) const;
 
         static Matrix4x4 getIdentity();
 

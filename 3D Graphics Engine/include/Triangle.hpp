@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vec3D.h"
+#include "Vec3D.hpp"
 
 namespace GE {
 

@@ -1,29 +1,39 @@
-#include "Matrix4x4.h"
+#include "Matrix4x4.hpp"
 
 namespace GE {
 
-    Matrix4x4::Column &Matrix4x4::operator[](int index) {
-        return m_columns.at(index);
+    Matrix4x4::Row &Matrix4x4::operator[](int index) {
+        return m_rows.at(index);
     }
 
-    Matrix4x4::Column const &Matrix4x4::operator[](int index) const {
-        return m_columns.at(index);
+    Matrix4x4::Row const &Matrix4x4::operator[](int index) const {
+        return m_rows.at(index);
     }
 
-    float &Matrix4x4::Column::operator[](int index) {
+    float &Matrix4x4::Row::operator[](int index) {
         return m_vals.at(index);
     }
 
-    float Matrix4x4::Column::operator[](int index) const {
+    float Matrix4x4::Row::operator[](int index) const {
         return m_vals.at(index);
     }
 
-    Vec3D Matrix4x4::multiplyVector(Vec3D const & v) const {
+    Vec3D Matrix4x4::multiplyVector(Vec3D const &v) const {
         Vec3D res;
         res.m_x = v.m_x * (*this)[0][0] + v.m_y * (*this)[1][0] + v.m_z * (*this)[2][0] + v.m_w * (*this)[3][0];
         res.m_y = v.m_x * (*this)[0][1] + v.m_y * (*this)[1][1] + v.m_z * (*this)[2][1] + v.m_w * (*this)[3][1];
         res.m_z = v.m_x * (*this)[0][2] + v.m_y * (*this)[1][2] + v.m_z * (*this)[2][2] + v.m_w * (*this)[3][2];
         res.m_w = v.m_x * (*this)[0][3] + v.m_y * (*this)[1][3] + v.m_z * (*this)[2][3] + v.m_w * (*this)[3][3];
+        return res;
+    }
+
+    Matrix4x4 Matrix4x4::multiplyMatrix(Matrix4x4 const &v) const {
+        Matrix4x4 res{};
+        for (int c = 0; c < 4; ++c) {
+            for (int r = 0; r < 4; ++r) {
+                res[r][c] = (*this)[r][0] * v[0][c] + (*this)[r][1] * v[1][c] + (*this)[r][2] * v[2][c] + (*this)[r][3] * v[3][c];
+            }
+        }
         return res;
     }
 

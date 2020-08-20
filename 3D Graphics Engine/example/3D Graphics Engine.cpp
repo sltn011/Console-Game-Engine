@@ -1,8 +1,8 @@
 #include "Console Game Engine.hpp"
-#include "Vec3D.h"
-#include "Triangle.h"
-#include "Matrix4x4.h"
-#include "Mesh.h"
+#include "Vec3D.hpp"
+#include "Triangle.hpp"
+#include "Matrix4x4.hpp"
+#include "Mesh.hpp"
 #include <algorithm>
 
 class Graphics3DEngine : public CGE::BaseGameEngine{
