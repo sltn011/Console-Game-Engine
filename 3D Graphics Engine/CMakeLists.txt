@@ -19,7 +19,7 @@ add_library(3DTools STATIC src/Vec3D.cpp src/Triangle.cpp src/Matrix4x4.cpp src/
 target_include_directories(3DTools PUBLIC include)
 
 # What will be compiled as an executable
-add_executable(exampleFile example/3D\ Graphics\ Engine.cpp)
+add_executable(App example/3D\ Graphics\ Engine.cpp)
 
 # Linking libraries with executable
-target_link_libraries(exampleFile 3DTools Threads::Threads)
+target_link_libraries(App 3DTools Threads::Threads)
