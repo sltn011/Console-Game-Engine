@@ -39,7 +39,7 @@ Game engine can draw sprites that are written inside binary file with special fo
 (short)width (short)height (uint16_t[width*height])pixelType (uint16_t[width*height])colorType
 ```  
 
-#! All files below use Console Game Engine
+# ! All files below use Console Game Engine
   
 # Console FPS
 Console FPS is a prototype of a game similar to Wolfenstein 3D.   
@@ -58,9 +58,19 @@ Controls:
 ```
 Installation:
 
-    Download "Console Game Engine.hpp", "Console FPS.cpp" and "Console FPS Sprites/" folder  
+    Download "Console FPS" folder  
     
-    Put downloaded files in one folder and compile  
+    In command line:
+    ...\Console FPS> cmake CMakeLists.txt
+    
+    After building project if you are using VS
+    Open project folder
+    Open .sln file
+    After VS loaded your project select App
+        Turn Unicode ON
+        Set it as StartUp Project
+        
+    You can now launch application
     
     For best FPS set compiler optimization to maximum (and set configuration to Release in VS)
     You can also try changing parameters of createConsole function in main function at "Console FPS.cpp"
