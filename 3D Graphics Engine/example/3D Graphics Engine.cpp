@@ -40,33 +40,28 @@ public:
         std::vector<GE::Triangle> trianglesToDraw;
 
         // Draw triangles
-        for (auto const &t : m_mesh.m_triangles) {
+        for (auto const &triangle : m_mesh.m_triangles) {
 
             // Matrixes for rotating points around X and Z axis
-            GE::Matrix4x4 rotX = GE::Matrix4x4::makeRotationX(m_theta);
+            GE::Matrix4x4 rotX = GE::Matrix4x4::makeRotationX(m_theta * 0.5f);
             GE::Matrix4x4 rotZ = GE::Matrix4x4::makeRotationZ(m_theta);
 
-            // Rotation of triangle around Z axis
-            GE::Triangle rotatedZTriang;
-            for (int i = 0; i < 3; ++i) {
-                rotatedZTriang.m_vertices[i] = rotZ.multiplyVector(t.m_vertices[i]);
-            }
+            // Matrix to offset triangle
+            GE::Matrix4x4 translationMatrix = GE::Matrix4x4::makeTranslation(0.0f, 0.0f, 8.0f);
 
-            // Rotation of triangle around X axis
-            GE::Triangle rotatedZXTriang;
-            for (int i = 0; i < 3; ++i) {
-                rotatedZXTriang.m_vertices[i] = rotX.multiplyVector(rotatedZTriang.m_vertices[i]);
-            }
+            // Combining all triangle rotations and translations into one matrix(order must be kept!)
+            GE::Matrix4x4 worldMatrix = rotZ.multiplyMatrix(rotX);
+            worldMatrix = worldMatrix.multiplyMatrix(translationMatrix);
 
-            // Offset triangle into screen
-            GE::Triangle translatedTriang = rotatedZXTriang;
+            // Modified triangle
+            GE::Triangle transformedTriangle;
             for (int i = 0; i < 3; ++i) {
-                translatedTriang.m_vertices[i].m_z += 8.0f;
+                transformedTriangle.m_vertices[i] = worldMatrix.multiplyVector(triangle.m_vertices[i]);
             }
 
             // Two sides of a triangle
-            GE::Vec3D line1 = translatedTriang.m_vertices[1] - translatedTriang.m_vertices[0];
-            GE::Vec3D line2 = translatedTriang.m_vertices[2] - translatedTriang.m_vertices[0];
+            GE::Vec3D line1 = transformedTriangle.m_vertices[1] - transformedTriangle.m_vertices[0];
+            GE::Vec3D line2 = transformedTriangle.m_vertices[2] - transformedTriangle.m_vertices[0];
 
             // Normal vector for our triangle
             GE::Vec3D normal = line1.crossProduct(line2);
@@ -76,7 +71,7 @@ public:
 
             // Calculating dot product between normal and vector from camera to point of a triangle
             // We can choose any point of a triangle bcz they all lie in a plane
-            float dotProduct = normal.dotProduct(translatedTriang.m_vertices[0] - m_camera);
+            float dotProduct = normal.dotProduct(transformedTriangle.m_vertices[0] - m_camera);
 
             // We can only see the side of a cube if dot product < 0
             if (dotProduct < 0.0f) {
@@ -90,24 +85,24 @@ public:
 
                 // Getting color of a cube pixel and pixel type using illumination power
                 CHAR_INFO c = getColor(dp);
-                translatedTriang.m_color = c.Attributes;
-                translatedTriang.m_pixel = c.Char.UnicodeChar;
+                transformedTriangle.m_color = c.Attributes;
+                transformedTriangle.m_pixel = c.Char.UnicodeChar;
 
                 // Project triangle from 3D to 2D
                 GE::Triangle projectedTriang{};
                 for (int i = 0; i < 3; ++i) {
-                    projectedTriang.m_vertices[i] = m_projectionMatrix.multiplyVector(translatedTriang.m_vertices[i]);
+                    projectedTriang.m_vertices[i] = m_projectionMatrix.multiplyVector(transformedTriangle.m_vertices[i]);
                     projectedTriang.m_vertices[i] /= projectedTriang.m_vertices[i].m_w;
                 }
-                projectedTriang.m_color = translatedTriang.m_color;
-                projectedTriang.m_pixel = translatedTriang.m_pixel;
+                projectedTriang.m_color = transformedTriangle.m_color;
+                projectedTriang.m_pixel = transformedTriangle.m_pixel;
 
                 // Scale into view
                 for (int i = 0; i < 3; ++i) {
 
                     // Shift normalized coordinates from [-1; +1] to [0; +2] 
-                    projectedTriang.m_vertices[i].m_x += 1.0f;
-                    projectedTriang.m_vertices[i].m_y += 1.0f;
+                    GE::Vec3D offsetView = { 1.0f, 1.0f, 0.0f };
+                    projectedTriang.m_vertices[i] += offsetView;
 
                     // Divide coordinates to become [0; +1] and muliply them by screen dimensions 
                     projectedTriang.m_vertices[i].m_x *= 0.5f * (float)m_screenWidth;
