@@ -1019,7 +1019,7 @@ namespace CGE {
         static inline int const numKeyboardKeys = 256;
         static inline int const numMouseButtons = 5;
 
-        keyState m_keys[numKeyboardKeys];
+        keyState m_keys[numKeyboardKeys]          = { 0 };
         short    m_keyOldState[numKeyboardKeys]   = { 0 };
         short    m_keyNewState[numKeyboardKeys]   = { 0 };
 
