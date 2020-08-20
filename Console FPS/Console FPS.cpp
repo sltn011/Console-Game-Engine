@@ -329,7 +329,7 @@ private:
     // Player data - coordinates, speed, FOV
     float m_fPlayerX = 1.0f;
     float m_fPlayerY = 22.0f;
-    float m_fPlayerA = 0.0f;
+    float m_fPlayerA = 1.0f;
     float m_fPlayerMoveSpeed = 4.0f;
     float m_fPlayerRotationSpeed = 2.0f;
     float m_fPlayerFOV = pi / 4.0f;
