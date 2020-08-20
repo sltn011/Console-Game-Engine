@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Project Name
-project(3D\ Graphics\ Engine)
+project("3D Graphics Engine")
 
 # Need Threads for Console Game Engine to work
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -19,7 +19,7 @@ add_library(3DTools STATIC src/Vec3D.cpp src/Triangle.cpp src/Matrix4x4.cpp src/
 target_include_directories(3DTools PUBLIC include)
 
 # What will be compiled as an executable
-add_executable(App example/3D\ Graphics\ Engine.cpp)
+add_executable(App "example/3D Graphics Engine.cpp")
 
 # Linking libraries with executable
 target_link_libraries(App 3DTools Threads::Threads)
