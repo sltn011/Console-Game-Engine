@@ -84,8 +84,7 @@ Videos used as tutorial for learning:
 
 # 3D Graphics Engine
 File contains program that renders rotating 3D mesh  
-Program can load meshes from triangulated .obj file  
-Example file renders rocket model in "3D Models/rocket.obj"  
+Program can load meshes from triangulated .obj file   
 Project contains 3DTools library with classes used for rendering  
 Project can be built with CMake. For this:  
 ```
@@ -105,3 +104,17 @@ You can now launch application
 Program uses matrix multiplication to rotate vertices around axises and to project 3D image to 2D screen  
 Sides that are visible to camera are calculated using dot product  
 Model is illuminated by "light source", sides are shaded according to amount of "light" they catch  
+  
+1) Model renderer renders model from .obj file and shows it on screen  
+Object is rotated using matrixes  
+  
+2) Camera example renders big mountains objects and allows user to fly around  
+Code shows how to create cameras for 3D worlds, how to render objects around it  
+and how to handle camera movement  
+Code also shows simple clipping algorithm to greatly boost perfomance by discarding  
+triangles that user doesn't see in FoV  
+```
+Camera controls:
+    WASD - moving in XZ plane
+    Space/LeftShift - move up and down in Y axis
+```
