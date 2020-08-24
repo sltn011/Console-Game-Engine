@@ -49,8 +49,8 @@ namespace GE {
         Matrix4x4 rotX{};
         rotX[0][0] =  1.0f;
         rotX[1][1] =  std::cosf(angleRad);
-        rotX[1][2] =  std::sinf(angleRad);
-        rotX[2][1] = -std::sinf(angleRad);
+        rotX[1][2] = -std::sinf(angleRad);
+        rotX[2][1] =  std::sinf(angleRad);
         rotX[2][2] =  std::cosf(angleRad);
         rotX[3][3] =  1.0f;
         return rotX;
@@ -70,8 +70,8 @@ namespace GE {
     Matrix4x4 Matrix4x4::makeRotationZ(float angleRad) {
         Matrix4x4 rotZ{};
         rotZ[0][0] =  std::cosf(angleRad);
-        rotZ[0][1] =  std::sinf(angleRad);
-        rotZ[1][0] = -std::sinf(angleRad);
+        rotZ[0][1] = -std::sinf(angleRad);
+        rotZ[1][0] =  std::sinf(angleRad);
         rotZ[1][1] =  std::cosf(angleRad);
         rotZ[2][2] =  1.0f;
         rotZ[3][3] =  1.0f;

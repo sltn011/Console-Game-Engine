@@ -54,8 +54,20 @@ namespace GE {
         return Vec3D(m_x / l, m_y / l, m_z / l);
     }
 
-    void Vec3D::normalize() {
+    Vec3D &Vec3D::normalize() {
         *this = getNormalized();
+        return *this;
+    }
+
+    Vec3D Vec3D::intersectPlane(Vec3D const &planePoint, Vec3D planeNormal, Vec3D const &lineStart, Vec3D const &lineEnd) {
+        planeNormal.normalize();
+        float planeD = -planeNormal.dotProduct(planePoint);
+        float ad = lineStart.dotProduct(planeNormal);
+        float bd = lineEnd.dotProduct(planeNormal);
+        float t = (-planeD - ad) / (bd - ad);
+        Vec3D lineStartToEnd = lineEnd - lineStart;
+        Vec3D lineToIntersect = lineStartToEnd * t;
+        return lineStart + lineToIntersect;
     }
 
     Vec3D operator+(Vec3D lhs, Vec3D const &rhs) {

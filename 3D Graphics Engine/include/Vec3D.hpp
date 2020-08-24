@@ -30,7 +30,9 @@ namespace GE {
 
         Vec3D getNormalized() const;
 
-        void normalize();
+        Vec3D &normalize();
+
+        static Vec3D intersectPlane(Vec3D const &planePoint, Vec3D planeNormal, Vec3D const &lineStart, Vec3D const &lineEnd);
     };
 
     Vec3D operator+(Vec3D lhs, Vec3D const &rhs);
