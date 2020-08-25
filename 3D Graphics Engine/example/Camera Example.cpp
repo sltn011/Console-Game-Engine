@@ -47,10 +47,14 @@ public:
             m_camera -= forwardVec;
         }
         if (getKey(L'A').isHeld) {
-            m_yawAngle -= m_cameraRotationSpeed * elapsedTime;
+            // We are adding to angle because in Cartesian coordinate system
+            // positive angle is rotating point counter clockwise
+            m_yawAngle += m_cameraRotationSpeed * elapsedTime;
         }
         if (getKey(L'D').isHeld) {
-            m_yawAngle += m_cameraRotationSpeed * elapsedTime;
+            // We are substracting to angle because in Cartesian coordinate system
+            // negative angle is rotating point counter clockwise
+            m_yawAngle -= m_cameraRotationSpeed * elapsedTime;
         }
 
         // Clear screen
