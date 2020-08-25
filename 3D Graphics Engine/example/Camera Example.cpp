@@ -62,8 +62,6 @@ public:
         // Draw triangles
         for (auto const &triangle : m_mesh.m_triangles) {
 
-            
-
             // Our up is same as Y axis
             GE::Vec3D upVec(0.0f, 1.0f, 0.0f);
 
