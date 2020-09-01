@@ -67,10 +67,10 @@ public:
         for (auto const &triangle : m_mesh.m_triangles) {
 
             // Our up is same as Y axis
-            GE::Vec3D upVec(0.0f, 1.0f, 0.0f);
+            GE::Vec3D upVec{ 0.0f, 1.0f, 0.0f };
 
             // Default direction camera is 
-            GE::Vec3D targetVec(0.0f, 0.0f, 1.0f);
+            GE::Vec3D targetVec{ 0.0f, 0.0f, 1.0f };
 
             // Matrix that rotates our target vector around Y axis (so camera can look left and right)
             GE::Matrix4x4 cameraRotation = GE::Matrix4x4::makeRotationY(m_yawAngle);
@@ -280,6 +280,17 @@ public:
         return res;
     }
 
+    GE::Vec3D intersectPlane(GE::Vec3D const &planePoint, GE::Vec3D planeNormal, GE::Vec3D const &lineStart, GE::Vec3D const &lineEnd) {
+        planeNormal.normalize();
+        float planeD = -planeNormal.dotProduct(planePoint);
+        float ad = lineStart.dotProduct(planeNormal);
+        float bd = lineEnd.dotProduct(planeNormal);
+        float t = (-planeD - ad) / (bd - ad);
+        GE::Vec3D lineStartToEnd = lineEnd - lineStart;
+        GE::Vec3D lineToIntersect = lineStartToEnd * t;
+        return lineStart + lineToIntersect;
+    }
+
     int clipTriangleAgainstPlane(GE::Vec3D planePoint, GE::Vec3D planeNorm, GE::Triangle const &in, GE::Triangle &out1, GE::Triangle &out2) {
         planeNorm.normalize();
 
@@ -335,8 +346,8 @@ public:
             out1.m_vertices[0] = *insidePoints[0];
 
             // Other two point are points where input triangle lines intersect with plane
-            out1.m_vertices[1] = GE::Vec3D::intersectPlane(planePoint, planeNorm, *insidePoints[0], *outsidePoints[0]);
-            out1.m_vertices[2] = GE::Vec3D::intersectPlane(planePoint, planeNorm, *insidePoints[0], *outsidePoints[1]);
+            out1.m_vertices[1] = intersectPlane(planePoint, planeNorm, *insidePoints[0], *outsidePoints[0]);
+            out1.m_vertices[2] = intersectPlane(planePoint, planeNorm, *insidePoints[0], *outsidePoints[1]);
 
             // Returning newly formed triangle
             return 1;
@@ -356,12 +367,12 @@ public:
             // First triangle consists of two inside points and one new point of intersection
             out1.m_vertices[0] = *insidePoints[0];
             out1.m_vertices[1] = *insidePoints[1];
-            out1.m_vertices[2] = GE::Vec3D::intersectPlane(planePoint, planeNorm, *insidePoints[0], *outsidePoints[0]);
+            out1.m_vertices[2] = intersectPlane(planePoint, planeNorm, *insidePoints[0], *outsidePoints[0]);
 
             // Second triangle consists of one inside point, point of intersection and point created above
             out2.m_vertices[0] = *insidePoints[1];
             out2.m_vertices[1] = out1.m_vertices[2];
-            out2.m_vertices[2] = GE::Vec3D::intersectPlane(planePoint, planeNorm, *insidePoints[1], *outsidePoints[0]);
+            out2.m_vertices[2] = intersectPlane(planePoint, planeNorm, *insidePoints[1], *outsidePoints[0]);
 
             // Return 2 new triangles
             return 2;

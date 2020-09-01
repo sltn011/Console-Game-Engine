@@ -10,10 +10,6 @@ namespace GE {
         float m_z;
         float m_w = 1.0f; // Need for sensible matrix vector multiplication
 
-        Vec3D();
-
-        Vec3D(float x, float y, float z);
-
         Vec3D &operator+=(Vec3D const &rhs);
 
         Vec3D &operator-=(Vec3D const &rhs);
@@ -31,8 +27,6 @@ namespace GE {
         Vec3D getNormalized() const;
 
         Vec3D &normalize();
-
-        static Vec3D intersectPlane(Vec3D const &planePoint, Vec3D planeNormal, Vec3D const &lineStart, Vec3D const &lineEnd);
     };
 
     Vec3D operator+(Vec3D lhs, Vec3D const &rhs);
@@ -40,6 +34,8 @@ namespace GE {
     Vec3D operator-(Vec3D lhs, Vec3D const &rhs);
 
     Vec3D operator*(Vec3D lhs, float val);
+
+    Vec3D operator*(float val, Vec3D rhs);
 
     Vec3D operator/(Vec3D lhs, float val);
 

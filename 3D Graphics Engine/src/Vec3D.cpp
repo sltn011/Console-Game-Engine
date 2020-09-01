@@ -2,10 +2,6 @@
 
 namespace GE {
 
-    Vec3D::Vec3D() : m_x{ 0.0f }, m_y{ 0.0f }, m_z{ 0.0f } {}
-
-    Vec3D::Vec3D(float x, float y, float z) : m_x{ x }, m_y{ y }, m_z{ z } {}
-
     Vec3D & Vec3D::operator+=(Vec3D const &rhs) {
         m_x += rhs.m_x;
         m_y += rhs.m_y;
@@ -42,7 +38,7 @@ namespace GE {
         float cx = m_y * rhs.m_z - m_z * rhs.m_y;
         float cy = m_z * rhs.m_x - m_x * rhs.m_z;
         float cz = m_x * rhs.m_y - m_y * rhs.m_x;
-        return Vec3D(cx, cy, cz);
+        return Vec3D{ cx, cy, cz };
     }
 
     float Vec3D::length() const {
@@ -51,23 +47,12 @@ namespace GE {
 
     Vec3D Vec3D::getNormalized() const {
         float l = length();
-        return Vec3D(m_x / l, m_y / l, m_z / l);
+        return Vec3D{ m_x / l, m_y / l, m_z / l };
     }
 
     Vec3D &Vec3D::normalize() {
         *this = getNormalized();
         return *this;
-    }
-
-    Vec3D Vec3D::intersectPlane(Vec3D const &planePoint, Vec3D planeNormal, Vec3D const &lineStart, Vec3D const &lineEnd) {
-        planeNormal.normalize();
-        float planeD = -planeNormal.dotProduct(planePoint);
-        float ad = lineStart.dotProduct(planeNormal);
-        float bd = lineEnd.dotProduct(planeNormal);
-        float t = (-planeD - ad) / (bd - ad);
-        Vec3D lineStartToEnd = lineEnd - lineStart;
-        Vec3D lineToIntersect = lineStartToEnd * t;
-        return lineStart + lineToIntersect;
     }
 
     Vec3D operator+(Vec3D lhs, Vec3D const &rhs) {
@@ -83,6 +68,11 @@ namespace GE {
     Vec3D operator*(Vec3D lhs, float val) {
         lhs *= val;
         return lhs;
+    }
+
+    Vec3D operator*(float val, Vec3D rhs) {
+        rhs *= val;
+        return rhs;
     }
 
     Vec3D operator/(Vec3D lhs, float val) {

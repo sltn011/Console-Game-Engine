@@ -8,12 +8,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Project Name
 project("3D Graphics Engine")
 
+# Set Unicode on
+add_definitions(-D_UNICODE -DUNICODE)
+
 # Need Threads for Console Game Engine to work
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 # Creating static library with tools for rendering 3D Image
-add_library(3DTools STATIC src/Vec3D.cpp src/Triangle.cpp src/Matrix4x4.cpp src/Mesh.cpp)
+add_library(3DTools STATIC src/Vec3D.cpp src/Triangle.cpp src/Matrix4x4.cpp src/Mesh.cpp src/Vec2D.cpp)
 
 # Folder with header files
 target_include_directories(3DTools PUBLIC include)
@@ -21,7 +24,9 @@ target_include_directories(3DTools PUBLIC include)
 # What will be compiled as an executable
 add_executable(ModelRenderer "example/Model Renderer.cpp")
 add_executable(CameraExample "example/Camera Example.cpp")
+add_executable(TexturingExample "example/Texturing Example.cpp")
 
 # Linking libraries with executable
 target_link_libraries(ModelRenderer 3DTools Threads::Threads)
 target_link_libraries(CameraExample 3DTools Threads::Threads)
+target_link_libraries(TexturingExample 3DTools Threads::Threads)

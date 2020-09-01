@@ -14,6 +14,12 @@ namespace GE {
         bool loadFromFile(std::string const &path);
     };
 
+    struct TexturedMesh {
+        std::vector<TexturedTriangle> m_triangles;
+
+        bool loadFromFile(std::string const &path, bool hasTexture = false);
+    };
+
 } // GE
 
 
