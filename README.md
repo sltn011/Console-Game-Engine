@@ -74,7 +74,9 @@ Installation:
     
     For best FPS set compiler optimization to maximum (and set configuration to Release in VS)
     You can also try changing parameters of createConsole function in main function at "Console FPS.cpp"
-```
+```  
+![Console FPS preview](https://github.com/sltn011/Console-Game-Engine/blob/master/ReadmeImages/consoleFPS1.png)
+  
 Original code used as an example:  
     https://github.com/OneLoneCoder/videos
     
@@ -107,6 +109,7 @@ Model is illuminated by "light source", sides are shaded according to amount of 
   
 1) Model renderer renders model from .obj file and shows it on screen  
 Object is rotated using matrixes  
+![Model Renderer preview](https://github.com/sltn011/Console-Game-Engine/blob/master/ReadmeImages/3DGraphics_ModelRenderer.png)  
   
 2) Camera example renders big mountains objects and allows user to fly around  
 Code shows how to create cameras for 3D worlds, how to render objects around it  
@@ -118,3 +121,21 @@ Camera controls:
     WASD - moving in XZ plane
     Space/LeftShift - move up and down in Y axis
 ```
+![Camera Example preview](https://github.com/sltn011/Console-Game-Engine/blob/master/ReadmeImages/3DGraphics_CameraExample.png)  
+  
+3) Texturing example loads cube mesh from .obj file and it's texture from .spr file  
+and renders cube with texture applied  
+This example adds support of texture vertexes for meshes and shows how to render  
+textures on polygons  
+This example also provides free camera for user with same controls as Camera example file  
+and uses depth buffer instead of sorting polygons based on distance to camera  
+![Texturing Example preview](https://github.com/sltn011/Console-Game-Engine/blob/master/ReadmeImages/3DGraphics_TexturingExample.png)  
+  
+Original code used as an example:  
+    https://github.com/OneLoneCoder/videos
+    
+Videos used as tutorial for learning:  
+    Part 1: https://youtu.be/ih20l3pJoeU  
+    Part 2: https://youtu.be/XgMWc6LumG4  
+    Part 3: https://youtu.be/HXSuNxpCzdM  
+    Part 4: https://youtu.be/nBzCS-Y0FcY  
