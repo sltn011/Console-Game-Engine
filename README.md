@@ -139,3 +139,19 @@ Videos used as tutorial for learning:
     Part 2: https://youtu.be/XgMWc6LumG4  
     Part 3: https://youtu.be/HXSuNxpCzdM  
     Part 4: https://youtu.be/nBzCS-Y0FcY  
+  
+# Maze Generator  
+Programm generates random maze using Recursive Backtracker algorithm, std::stack structure and Console Game Engine to render  
+process of maze creation step by step  
+Algorithm uses data from current maze cell(which is on top of the stack), gets random not yet visited neighbour cell and creates path  
+between two. Then neighbour is put on stack and becomes current. If all neighbours were already visited - backtrack by popping top cell from stack  
+After each step maze is rendered to create animation  
+Algorithm works until all cells are visited  
+1) Maze Generator creating new maze  
+![MazeGeneratorWorking](https://github.com/sltn011/Console-Game-Engine/blob/master/ReadmeImages/MazeGeneratorWorking.png)  
+  
+2) One of mazes created by Generator  
+![MazeGeneratorResult](https://github.com/sltn011/Console-Game-Engine/blob/master/ReadmeImages/MazeGeneratorResult.png)  
+  
+Video used as tutorial for learning:  
+    https://youtu.be/Y37-gB83HKE  
