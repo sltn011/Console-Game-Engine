@@ -8,6 +8,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Project Name
 project("Console FPS")
 
+# Set Unicode on
+add_definitions(-D_UNICODE -DUNICODE)
+
 # Need Threads for Console Game Engine to work
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
