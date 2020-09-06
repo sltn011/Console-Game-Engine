@@ -155,3 +155,24 @@ Algorithm works until all cells are visited
   
 Video used as tutorial for learning:  
     https://youtu.be/Y37-gB83HKE  
+  
+# Perlin Noise Generator  
+Programm generates random seed and uses it to produce 1D or 2D Perlin-like noise  
+Perlin noise is created by summing waves with different amplitudes and wave lenghts  
+Generated noise is than rendered in the console using Console Game Engine  
+```
+Controls:
+    1, 2 - 1D or 2D mode
+    Space - changing number of octaves used in noise generation
+    Z - Creating new noise seed
+    I - Switching interpoltion methods (Linear and Cosine)
+    Up/Down - Increase/Decrease value used to decrease amplitude of each consecutive octave  
+```  
+1) 1D Perlin noise example  
+![1D Perlin Noise](https://github.com/sltn011/Console-Game-Engine/blob/master/ReadmeImages/PerlinNoiseGenerator1D.png)  
+  
+2) 2D Perlin noise example(different values are painted differently)  
+![2D Perlin Noise](https://github.com/sltn011/Console-Game-Engine/blob/master/ReadmeImages/PerlinNoiseGenerator2D.png)  
+  
+Video used as tutorial for learning:  
+    https://youtu.be/6-0UaeJBumA
